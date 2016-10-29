@@ -1,0 +1,25 @@
+void setup(){
+  Serial.begin(9600);
+}
+
+int k = 2;
+
+void loop() {
+  int i = 2;
+  int j = 3;
+
+  k = myMultiplyFunction(k, j); // richiamo funzione 
+  
+  Serial.println(k);
+  delay(100);
+}
+
+// definizioen funzione inizio 
+
+int myMultiplyFunction(int x, int y){
+  int result;
+  result = x + y;
+  return result;
+}
+
+// definizioen funzione fine . puo stare prima o dopo non dentro il loop
