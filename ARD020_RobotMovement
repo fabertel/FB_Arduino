@@ -1,6 +1,8 @@
 /*
   HG7881_Motor_Driver_Example - Arduino
   Test doppio motore - FB
+  dovrebbe bastare MT_MOVE e non FWD e REV ma non funziona ancora 
+  loop vanno bene ma non gira motore.. 
   https://www.BananaRobotics.com/shop/HG7881-(L9110)-Dual-Channel-Motor-Driver-Module
 */
 
@@ -17,9 +19,11 @@
 #define MOTOR_B_DIR HG7881_B_IB // Motor B Direction
 
 // the actual values for "fast" and "slow" depend on the motor
-#define PWM_SLOW 50  // arbitrary slow speed PWM duty cycle
-#define PWM_FAST 200 // arbitrary fast speed PWM duty cycle
+#define SLOW 50  // arbitrary slow speed PWM duty cycle
+#define FAST 200 // arbitrary fast speed PWM duty cycle
 #define DIR_DELAY 1000 // brief delay for abrupt motor changes
+#define FWD 1
+#define REV 0
 
 void setup()
 {
@@ -35,51 +39,48 @@ void setup()
 }
 
 void MT_STOP() {
-  digitalWrite( MOTOR_B_DIR, LOW );
-  digitalWrite( MOTOR_B_PWM, LOW );
-  digitalWrite( MOTOR_A_DIR, LOW );
-  digitalWrite( MOTOR_A_PWM, LOW );
-  Serial.println( "Soft stop (coast)..." );
+digitalWrite( MOTOR_B_DIR, LOW );
+digitalWrite( MOTOR_B_PWM, LOW );
+digitalWrite( MOTOR_A_DIR, LOW );
+digitalWrite( MOTOR_A_PWM, LOW );
 }
 
 void MT_FWD(int SPEED) {
-  digitalWrite( MOTOR_B_DIR, HIGH ); // direction = forward
-  analogWrite( MOTOR_B_PWM, 255 - SPEED ); // PWM speed = variobile
-  digitalWrite( MOTOR_A_DIR, HIGH ); // direction = forward
-  analogWrite( MOTOR_A_PWM, 255 - SPEED ); // PWM speed = variobile
+  MT_STOP();
   Serial.print( "FWD" );
+  Serial.print(" ");
   Serial.println( SPEED );
+  digitalWrite( MOTOR_B_DIR, HIGH ); // direction = forward
+  analogWrite( MOTOR_B_PWM, 255-SPEED ); // PWM speed = variobile
+  digitalWrite( MOTOR_A_DIR, HIGH ); // direction = forward
+  analogWrite( MOTOR_A_PWM, 255-SPEED ); // PWM speed = variobile
+  delay(DIR_DELAY);
 }
 
 void MT_REV(int SPEED) {
+  MT_STOP();
+  Serial.print( "REV" );
+  Serial.print(" ");
+  Serial.println( SPEED );
   digitalWrite( MOTOR_B_DIR, LOW ); // direction = reverse
   analogWrite( MOTOR_B_PWM, SPEED ); // PWM speed = variobile
   digitalWrite( MOTOR_A_DIR, LOW ); // direction = reverse
   analogWrite( MOTOR_A_PWM, SPEED ); // PWM speed = variobile
-  Serial.print( "REV" );
-  Serial.println( SPEED );
+  delay(DIR_DELAY);
 }
 
 void MT_MOVE(int SPEED, int DIRECTION) {
-  digitalWrite( MOTOR_B_DIR, DIRECTION ); // direction = reverse
-  analogWrite( MOTOR_B_PWM, SPEED ); // PWM speed = variobile
-  digitalWrite( MOTOR_A_DIR, DIRECTION ); // direction = reverse
-  analogWrite( MOTOR_A_PWM, SPEED ); // PWM speed = variobile
-  Serial.print( DIRECTION );
-  Serial.println( SPEED );
+  MT_STOP();
+  Serial.print(DIRECTION);
+  Serial.print(" ");
+  Serial.println(SPEED);
+  digitalWrite( MOTOR_B_DIR, DIRECTION ); 
+  analogWrite( MOTOR_B_PWM, SPEED ); 
+  digitalWrite( MOTOR_A_DIR, DIRECTION ); 
+  analogWrite( MOTOR_A_PWM, SPEED );
+  delay(DIR_DELAY);
 }
 
-/*
-MT_MOVE(PWM_SLOW,1); //FWD SLOW
-MT_MOVE(PWM_SLOW,0); //REV SLOW
-MT_MOVE(PWM_FAST,1); //FWD FAST
-MT_MOVE(PWM_FAST,0); //REV FAST
-MT_STOP()
-MT_FWD(PWM_SLOW);   //FWD SLOW
-MT_FWD(PWM_FAST);   //FWD FAST
-MT_REV(PWM_SLOW);   //REV SLOW
-MT_REV(PWM_FAST);   //REV FAST
-*/
 
 void loop()
 {
@@ -88,34 +89,21 @@ void loop()
   Serial.println( "-----------------------------" );
   Serial.println( "MOTOR v1" );
   Serial.println( "-----------------------------" );
-MT_STOP();
-Serial.println ("MT_STOP");
-delay(DIR_DELAY);
-MT_MOVE(PWM_SLOW, 1); //FWD SLOW
-Serial.println ("FWD SLOW");
-delay(DIR_DELAY);
-MT_MOVE(PWM_SLOW, 0); //REV SLOW
-Serial.println ("REV SLOW");
-delay(DIR_DELAY);
-MT_MOVE(PWM_FAST, 1); //FWD FAST
-Serial.println ("FWD FAST");
-delay(DIR_DELAY);
-MT_MOVE(PWM_FAST, 0); //REV FAST
-Serial.println ("REV FAST");
-delay(DIR_DELAY);
-MT_FWD(PWM_SLOW);   //FWD SLOW
-Serial.println ("FWD SLOW");  
-delay(DIR_DELAY);
-MT_FWD(PWM_FAST);   //FWD FAST
-Serial.println ("FWD FAST");
-delay(DIR_DELAY);
-MT_REV(PWM_SLOW);   //REV SLOW
-Serial.println ("REV SLOW");
-delay(DIR_DELAY);
-MT_REV(PWM_FAST);   //REV FAST
-Serial.println ("REV FAST");
-delay(DIR_DELAY);
 
+  MT_STOP();
+  delay(DIR_DELAY);
+  
+  MT_MOVE(20, FWD); //FWD SLOW
+  MT_MOVE(20, REV); //REV SLOW
+  MT_MOVE(40, FWD); //FWD FAST
+  MT_MOVE(40, REV); //REV FAST
+
+/*
+  MT_FWD(SLOW);   //FWD SLOW
+  MT_FWD(FAST);   //FWD FAST
+  MT_REV(SLOW);   //REV SLOW
+  MT_REV(FAST);   //REV FAST
+*/
 
   Serial.println( "-----------------------------" );
   Serial.println( "End demo MOTOR v1" );
