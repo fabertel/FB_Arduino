@@ -68,6 +68,14 @@ void loop()
   MT_MOVE(20, REV); //REV SLOW
   MT_MOVE(40, FWD); //FWD FAST
   MT_MOVE(40, REV); //REV FAST
+  
+  */forse meglio cosi
+    MT_MOVE(50, 1);   //FWD SLOW
+  MT_MOVE(200, 1);  //FWD FAST
+  MT_MOVE(200, 0);  //REV SLOW
+  MT_MOVE(50, 0);   //REV FAST 
+*/
+
 
   Serial.println( "-----------------------------" );
   Serial.println( "End demo MOTOR v1" );
