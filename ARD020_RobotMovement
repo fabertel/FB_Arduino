@@ -29,21 +29,18 @@ void setup()
 }
 
 void MT_STOP() {
-  digitalWrite( MOTOR_B_DIR, LOW );
-  digitalWrite( MOTOR_B_PWM, LOW );
-  digitalWrite( MOTOR_A_DIR, LOW );
-  digitalWrite( MOTOR_A_PWM, LOW );
+  digitalWrite( MOTOR_A_DIR, LOW );         analogWrite( MOTOR_A_PWM, 0 );
+  digitalWrite( MOTOR_B_DIR, LOW );         analogWrite( MOTOR_B_PWM, 0 );
+  Serial.println("STOP");
  }
 
 void MT_MOVE(int SPEED, int DIRECTION) {
   MT_STOP();
-  Serial.print(DIRECTION);
-  Serial.print(" ");
-  Serial.println(SPEED);
-  digitalWrite  ( MOTOR_B_DIR, DIRECTION ); 
-  analogWrite ( MOTOR_B_PWM, SPEED ); 
-  digitalWrite  ( MOTOR_A_DIR, DIRECTION ); 
-  analogWrite ( MOTOR_A_PWM, SPEED );
+  digitalWrite( MOTOR_A_DIR, LOW );         analogWrite( MOTOR_A_PWM, 0 );
+  digitalWrite( MOTOR_B_DIR, LOW );         analogWrite( MOTOR_B_PWM, 0 );
+  digitalWrite( MOTOR_B_DIR, DIRECTION );   analogWrite ( MOTOR_B_PWM, SPEED ); 
+  digitalWrite( MOTOR_A_DIR, DIRECTION );   analogWrite ( MOTOR_A_PWM, SPEED );
+  Serial.print("GO. Dir:");Serial.print(DIRECTION);Serial.print(" Speed:");Serial.println(SPEED);
   delay(DIR_DELAY);
 }
 
@@ -52,12 +49,10 @@ int var = 0;
   while(var < numeroblinks){
   digitalWrite(LED_BUILTIN, HIGH);    delay(timee);            
   digitalWrite(LED_BUILTIN, LOW);     delay(timee);
-  var++;
-  }
+  var++;}
   delay(500);                      
   Serial.print("BLINKS #:");Serial.print(numeroblinks);Serial.print(" t:");Serial.println(timee);
 }
-
 
 void loop()
 {
@@ -70,13 +65,9 @@ void loop()
   delay(DIR_DELAY);
   
   MT_MOVE(20, FWD); //FWD SLOW
-  BLINK(5,50);
   MT_MOVE(20, REV); //REV SLOW
-  BLINK(2,100);
   MT_MOVE(40, FWD); //FWD FAST
-  BLINK(2,50);
   MT_MOVE(40, REV); //REV FAST
-  BLINK(8,20);
 
   Serial.println( "-----------------------------" );
   Serial.println( "End demo MOTOR v1" );
