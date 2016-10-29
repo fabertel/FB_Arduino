@@ -11,6 +11,8 @@
 #define PWM_SLOW 50  	// arbitrary slow speed PWM duty cycle
 #define PWM_FAST 200 	// arbitrary fast speed PWM duty cycle
 #define DIR_DELAY 1000 	// brief delay for abrupt motor changes
+#define FWD 1
+#define REV 0
  
 void setup()
 {
