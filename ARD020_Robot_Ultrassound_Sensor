@@ -4,8 +4,8 @@
  Some code and wiring inspired by http://en.wikiversity.org/wiki/User:Dstaub/robotcar
  */
 
-#define trigPin 13
-#define echoPin 12
+#define trigPin 12
+#define echoPin 13
 
 void setup() {
   Serial.begin (9600);
