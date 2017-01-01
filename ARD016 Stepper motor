@@ -13,6 +13,11 @@ This Motor has a Gear ratio of 64 , and Stride Angle 5.625°  so this motor has 
 steps = Number of steps in One Revolution  * Gear ratio   .
 steps= (360°/5.625°)*64"Gear ratio" = 64 * 64 =4096 . this value will substitute it on The arduino Sketch 
 
+see also 
+https://arduino-info.wikispaces.com/SmallSteppers
+http://www.geeetech.com/Documents/Stepper%20motor%20basic.pdf
+
+
  */
      
      
