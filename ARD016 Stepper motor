@@ -9,8 +9,7 @@
    Gnd
    written By :Mohannad Rawashdeh
   http://www.instructables.com/member/Mohannad+Rawashdeh/
-     28/9/2013
-  */
+     28/9/2013  */
 
 #define IN1  8
 #define IN2  9
