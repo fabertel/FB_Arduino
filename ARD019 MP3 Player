@@ -22,31 +22,31 @@ $O		0xEF	Ending byte of the command
 
 ********************************************
 								
-Command										| 	CM d1	d2	|ommand bytes 			  | MEANING
-[Next Song]								| 	1	0	0	| 7E FF 06 01 00 00 00 E  | 
-[Previous Song]						| 	2	0	0	| 7E FF 06 02 00 00 00 E  | 
-[Play with index]					| 	3	0	1	| 7E FF 06 03 00 00 01 E  | Play the first song
-													| 	3	0	2	| 7E FF 06 03 00 00 02 E  | Play the second song
-[Volume up]								| 	4	0	0	| 7E FF 06 04 00 00 00 E  | Volume increased one
-[Volume down]							| 	5	0	0	| 7E FF 06 05 00 00 00 E  | Volume decrease one
-[Set volume]							| 	6	0	1E	| 7E FF 06 06 00 00 1E E  | Set the volume to 30 (0x1E is 30)
-[Single cycle play]				| 	8	0	1	| 7E FF 06 08 00 00 01 E  | Single cycle play the first song
-[Select device]						| 	9	0	2	| 7E FF 06 09 00 00 02 E  | Select storage device to TF card
-[Sleep mode]							| 	0A	0	0	| 7E FF 06 0A 00 00 00 E  | Chip enters sleep mode
-[Wake up]									| 	0B	0	0	| 7E FF 06 0B 00 00 00 E  | Chip wakes up
-[Reset]										| 	0C	0	0	| 7E FF 06 0C 00 00 00 E  | Chip reset
-[Play]										| 	0D	0	0	| 7E FF 06 0D 00 00 00 E  | Resume playback
-[Pause]										| 	0E	0	0	| 7E FF 06 0E 00 00 00 E  | Playback is paused
-[Play  folder+file name]	| 	0F	1	1	| 7E FF 06 0F 00 01 01 E  | Play the song with the directory: /01/001xxx.mp3
-													| 	0F	1	2	| 7E FF 06 0F 00 01 02 E  | Play the song with the directory: /01/002xxx.mp3
-[Stop play]								| 	16	0	0	| 7E FF 06 16 00 00 00 E  | 
-[Cycle play in  folder]		| 	17	0	1	| 7E FF 06 17 00 00 01 E  | 01 folder cycle play
-[Shuffle Play]						| 	18	0	0	| 7E FF 06 18 00 00 00 E  | 
-[Set single cycle play]		| 	19	0	0	| 7E FF 06 19 00 00 00 E  | Start up single cycle play
-													| 	19	0	1	| 7E FF 06 19 00 00 01 E  | Close single cycle play
-[Set DAC]									| 	1A	0	0	| 7E FF 06 1A 00 00 00 E  | Start up DAC output
-													| 	1A	0	1	| 7E FF 06 1A 00 00 01 E  | DAC no output
-[Play with volume]				| 	22	1E	1	| 7E FF 06 22 00 1E 01 E  | Set the volume to 30 (0x1E is 30) and play the first song
-													| 	22	0F	2	| 7E FF 06 22 00 0F 02 E  | Set the volume to 15(0x0f is 15) and play the second song
-	
+CMD	data1	data2	Command	MEANING
+1	0	0	[Next Song]	
+2	0	0	[Previous Song]	
+3	0	1	[Play with index]	Play the first song
+3	0	2	[Play with index]	Play the second song
+4	0	0	[Volume up]	Volume increased one
+5	0	0	[Volume down]	Volume decrease one
+6	0	1E	[Set volume]	Set the volume to 30 (0x1E is 30)
+8	0	1	[Single cycle play]	Single cycle play the first song
+9	0	2	[Select device]	Select storage device to TF card
+0A	0	0	[Sleep mode]	Chip enters sleep mode
+0B	0	0	[Wake up]	Chip wakes up
+0C	0	0	[Reset]	Chip reset
+0D	0	0	[Play]	Resume playback
+0E	0	0	[Pause]	Playback is paused
+0F	1	1	[Play  folder+file name]	Play the song with the directory: /01/001xxx.mp3
+0F	1	2	[Play  folder+file name]	Play the song with the directory: /01/002xxx.mp3
+16	0	0	[Stop play]	
+17	0	1	[Cycle play in  folder]	01 folder cycle play
+18	0	0	[Shuffle Play]	
+19	0	0	[Set single cycle play]	Start up single cycle play
+19	0	1	[Set single cycle play]	Close single cycle play
+1A	0	0	[Set DAC]	Start up DAC output
+1A	0	1	[Set DAC]	DAC no output
+22	1E	1	[Play with volume]	Set the volume to 30 (0x1E is 30) and play the first song
+22	0F	2	[Play with volume]	Set the volume to 15(0x0f is 15) and play the second song
+
 ********************************************	
