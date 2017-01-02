@@ -1,0 +1,52 @@
+
+Catalex MP3 Board (YX5300 Chip)
+
+DX http://www.dx.com/p/uart-control-serial-mp3-music-player-module-for-arduino-avr-arm-pic-blue-silver-342439#.WGrTxvnhCiN
+Catalex MP3 Board (YX5300 Chip) 	http://www.da-share.com/misc/catalex-mp3-board-yx5300-chip/
+zip file: http://www.da-share.com/files/datasheets/Catalex_YX5300_Docs.zip
+Also forum discussion here http://www.thebackshed.com/forum/forum_posts.asp?TID=7319 - talks about issue playing small files
+Docs say micro sd <= 2gb and micro sdhc <= 32gb
+
+********************************************
+
+COMMAND SYNTAX . VARIABILI SOLO CMD,DATA1,DATA2
+Mark	Byte	Byte description
+$S		0x7E	Every command should start with $(0x7E)
+VER		0xFF	Version information
+Len		0x06	The number of bytes of the command without starting byte and ending byte
+CMD		0xxx	Such as PLAY and PAUSE and so on
+Feedback0x00	0x00 = not feedback, 0x01 = feedback
+data1	0xxx	The length of the data is not limit and usually it has two bytes
+data2	0xxx	The length of the data is not limit and usually it has two bytes
+$O		0xEF	Ending byte of the command
+
+********************************************
+								
+Command										| 	CM d1	d2	|ommand bytes 			  | MEANING
+[Next Song]								| 	1	0	0	| 7E FF 06 01 00 00 00 E  | 
+[Previous Song]						| 	2	0	0	| 7E FF 06 02 00 00 00 E  | 
+[Play with index]					| 	3	0	1	| 7E FF 06 03 00 00 01 E  | Play the first song
+													| 	3	0	2	| 7E FF 06 03 00 00 02 E  | Play the second song
+[Volume up]								| 	4	0	0	| 7E FF 06 04 00 00 00 E  | Volume increased one
+[Volume down]							| 	5	0	0	| 7E FF 06 05 00 00 00 E  | Volume decrease one
+[Set volume]							| 	6	0	1E	| 7E FF 06 06 00 00 1E E  | Set the volume to 30 (0x1E is 30)
+[Single cycle play]				| 	8	0	1	| 7E FF 06 08 00 00 01 E  | Single cycle play the first song
+[Select device]						| 	9	0	2	| 7E FF 06 09 00 00 02 E  | Select storage device to TF card
+[Sleep mode]							| 	0A	0	0	| 7E FF 06 0A 00 00 00 E  | Chip enters sleep mode
+[Wake up]									| 	0B	0	0	| 7E FF 06 0B 00 00 00 E  | Chip wakes up
+[Reset]										| 	0C	0	0	| 7E FF 06 0C 00 00 00 E  | Chip reset
+[Play]										| 	0D	0	0	| 7E FF 06 0D 00 00 00 E  | Resume playback
+[Pause]										| 	0E	0	0	| 7E FF 06 0E 00 00 00 E  | Playback is paused
+[Play  folder+file name]	| 	0F	1	1	| 7E FF 06 0F 00 01 01 E  | Play the song with the directory: /01/001xxx.mp3
+													| 	0F	1	2	| 7E FF 06 0F 00 01 02 E  | Play the song with the directory: /01/002xxx.mp3
+[Stop play]								| 	16	0	0	| 7E FF 06 16 00 00 00 E  | 
+[Cycle play in  folder]		| 	17	0	1	| 7E FF 06 17 00 00 01 E  | 01 folder cycle play
+[Shuffle Play]						| 	18	0	0	| 7E FF 06 18 00 00 00 E  | 
+[Set single cycle play]		| 	19	0	0	| 7E FF 06 19 00 00 00 E  | Start up single cycle play
+													| 	19	0	1	| 7E FF 06 19 00 00 01 E  | Close single cycle play
+[Set DAC]									| 	1A	0	0	| 7E FF 06 1A 00 00 00 E  | Start up DAC output
+													| 	1A	0	1	| 7E FF 06 1A 00 00 01 E  | DAC no output
+[Play with volume]				| 	22	1E	1	| 7E FF 06 22 00 1E 01 E  | Set the volume to 30 (0x1E is 30) and play the first song
+													| 	22	0F	2	| 7E FF 06 22 00 0F 02 E  | Set the volume to 15(0x0f is 15) and play the second song
+	
+********************************************	
