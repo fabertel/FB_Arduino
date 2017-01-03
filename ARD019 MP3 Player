@@ -1,11 +1,18 @@
 /*
 Catalex MP3 Board (YX5300 Chip)
-
 DX http://www.dx.com/p/uart-control-serial-mp3-music-player-module-for-arduino-avr-arm-pic-blue-silver-342439#.WGrTxvnhCiN
 Catalex MP3 Board (YX5300 Chip) 	http://www.da-share.com/misc/catalex-mp3-board-yx5300-chip/
 zip file: http://www.da-share.com/files/datasheets/Catalex_YX5300_Docs.zip
 Also forum discussion here http://www.thebackshed.com/forum/forum_posts.asp?TID=7319 - talks about issue playing small files
 Docs say micro sd <= 2gb and micro sdhc <= 32gb
+
+********************************************
+
+CONNESSIONI SCHEDA <--> ARDUINO
+	GND <---> GND
+	VCC <---> 5V
+	TX <---> D5 (Digital5)
+	RX <---> D6 (Digital6)
 
 ********************************************
 
