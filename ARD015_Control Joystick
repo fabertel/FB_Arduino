@@ -5,48 +5,48 @@
 
 /*
 Joy >> Arduino
-GND	>> GND
-+5V	>> 5V
-VRx	>> A1
+GND  >> GND
++5V >> 5V
+VRx >> A1
 VRy >> A0
-SW	>> D2
+SW  >> D2
 */
 
 int xPin = A1;
 int yPin = A0;
 int buttonPin = 2;
-
 int xPosition = 0;
 int yPosition = 0;
 int buttonState = 0;
 
 void setup() {
-  // initialize serial communications at 9600 bps:
   Serial.begin(9600);
-
   pinMode(xPin, INPUT);
   pinMode(yPin, INPUT);
-
-  //activate pull-up resistor on the push-button pin
-  pinMode(buttonPin, INPUT_PULLUP);
-
+  pinMode(buttonPin, INPUT_PULLUP);   //activate pull-up resistor on the push-button pin
   // For versions prior to Arduino 1.0.1
   // pinMode(buttonPin, INPUT);
   // digitalWrite(buttonPin, HIGH);
-
 }
 
 void loop() {
+  JoyRead();
+  JoyPrint(200);
+}
+
+
+void JoyRead(){
   xPosition = analogRead(xPin);
   yPosition = analogRead(yPin);
   buttonState = digitalRead(buttonPin);
+ } 
 
+void JoyPrint(int delaytime){
   Serial.print("X: ");
   Serial.print(xPosition);
   Serial.print(" | Y: ");
   Serial.print(yPosition);
   Serial.print(" | Button: ");
   Serial.println(buttonState);
-
-  delay(1000); // add some delay between reads
+  delay(delaytime);
 }
