@@ -17,6 +17,12 @@ int yPin = A0;
 int buttonPin = 2;
 int xPosition = 0;
 int yPosition = 0;
+int x_Range = 0;
+int x_Sign = 0;
+int x_Abs = 0;
+int y_Sign = 0;
+int y_Range = 0;
+int y_Abs = 0;
 int buttonState = 0;
 
 void setup() {
@@ -31,22 +37,46 @@ void setup() {
 
 void loop() {
   JoyRead();
-  JoyPrint(200);
+  JoyPrint(1000);
+  
 }
-
 
 void JoyRead(){
   xPosition = analogRead(xPin);
   yPosition = analogRead(yPin);
   buttonState = digitalRead(buttonPin);
+  x_Range = xPosition - 511 ;
+  x_Abs=abs(x_Range);
+  if(x_Range>0)
+    {x_Sign=1;} 
+    else 
+    {x_Sign=0;} ;
+  y_Range = yPosition - 511 ;
+  y_Abs=abs(y_Range);
+  if(y_Range>0)
+    {y_Sign=1;} 
+    else 
+    {y_Sign=0;} ;
  } 
 
 void JoyPrint(int delaytime){
   Serial.print("X: ");
   Serial.print(xPosition);
-  Serial.print(" | Y: ");
+  Serial.print(" | x_Range: ");
+  Serial.print(x_Range);
+  Serial.print(" | x_Abs: ");
+  Serial.print(x_Abs);
+  Serial.print(" | x_Sign: ");
+  Serial.print(x_Sign);
+  Serial.print(" || Y: ");
   Serial.print(yPosition);
-  Serial.print(" | Button: ");
+  Serial.print(" | y_Range: ");
+  Serial.print(y_Range);
+  Serial.print(" | y_Abs: ");
+  Serial.print(y_Abs);
+  Serial.print(" | y_Sign: ");
+  Serial.print(y_Sign);
+  Serial.print(" !| Button: ");
   Serial.println(buttonState);
   delay(delaytime);
 }
