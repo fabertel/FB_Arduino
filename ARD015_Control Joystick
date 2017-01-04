@@ -3,6 +3,15 @@
 // Button 1 se non premuto
 // collegamenti : http://42bots.com/tutorials/arduino-joystick-module-example/
 
+/*
+Joy >> Arduino
+GND	>> GND
++5V	>> 5V
+VRx	>> A1
+VRy >> A0
+SW	>> D2
+*/
+
 int xPin = A1;
 int yPin = A0;
 int buttonPin = 2;
