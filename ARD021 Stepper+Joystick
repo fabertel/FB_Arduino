@@ -1,0 +1,225 @@
+// ARD021 Stepper pilotato da Joystick  v1 . solo asse X - 05/01/2017
+// da ARD015+ ARD016 
+// usato basetta per sdoppiare alimentazione 5V . no conflitti su pin per ora 
+/*
+
+legenda 
+	m=motor
+	j=joystick
+	2=motor+joystick
+ 
+                                       +-----+
+         +----[PWR]-------------------| USB |--+
+         |                            +-----+  |
+         |         GND/RST2  [ ][ ]            |
+         |       MOSI2/SCK2  [ ][ ]  A5/SCL[ ] |   C5 
+         |          5V/MISO2 [ ][ ]  A4/SDA[ ] |   C4 
+         |                             AREF[ ] |
+         |                              GND[ ] |
+         | [ ]N/C                    SCK/13[ ] |   B5
+         | [ ]IOREF                 MISO/12[ ] |   .
+         | [ ]RST                   MOSI/11[m]~|   .
+         | [ ]3V3    +---+               10[m]~|   .
+         | [2]5v    -| A |-               9[m]~|   .
+         | [2]GND   -| R |-               8[m] |   B0
+         | [ ]GND   -| D |-                    |
+         | [ ]Vin   -| U |-               7[ ] |   D7
+         |          -| I |-               6[ ]~|   .
+         | [j]A0    -| N |-               5[ ]~|   .
+         | [j]A1    -| O |-               4[ ] |   .
+         | [ ]A2     +---+           INT1/3[ ]~|   .
+         | [ ]A3                     INT0/2[j] |   .
+         | [ ]A4/SDA  RST SCK MISO     TX>1[ ] |   .
+         | [ ]A5/SCL  [ ] [ ] [ ]      RX<0[ ] |   D0
+         |            [ ] [ ] [ ]              |
+         |  UNO_R3    GND MOSI 5V  ____________/
+          \_______________________/
+		  
+		  http://busyducks.com/ascii-art-arduinos
+*/
+ 
+// Stepper Definitions
+#define IN1  8
+#define IN2  9
+#define IN3  10
+#define IN4  11
+int Steps = 0;
+boolean Direction = true;// gre
+unsigned long last_time;
+unsigned long currentMillis ;
+int steps_standard=500;   /* 4096; = full 360 degrees  */
+int steps_left=steps_standard;
+long time;
+
+// Joy Definitions
+int xPin = A1;
+int yPin = A0;
+int buttonPin = 2;
+int xPosition = 0;
+int yPosition = 0;
+int x_Range = 0;
+int x_Sign = 0;
+int x_Abs = 0;
+int y_Sign = 0;
+int y_Range = 0;
+int y_Abs = 0;
+int buttonState = 0;
+
+
+void setup()
+{
+// Stepper Setup
+Serial.begin(9600);
+pinMode(IN1, OUTPUT); 
+pinMode(IN2, OUTPUT); 
+pinMode(IN3, OUTPUT); 
+pinMode(IN4, OUTPUT); 
+delay(500);
+Serial.println("Go!");
+// Joy Setup
+pinMode(xPin, INPUT);
+pinMode(yPin, INPUT);
+pinMode(buttonPin, INPUT_PULLUP);   //activate pull-up resistor on the push-button pin
+}
+
+
+// Stepper  loop
+void loop()
+{
+	
+  JoyRead();
+  JoyPrint(1000);
+  if (x_Abs>100) variablesteps(x_Abs,x_Sign);
+}
+
+
+// Joy  functions
+void JoyRead(){
+  xPosition = analogRead(xPin);
+  yPosition = analogRead(yPin);
+  buttonState = digitalRead(buttonPin);
+  x_Range = xPosition - 511 ;
+  x_Abs=abs(x_Range);
+  if(x_Range>0)
+    {x_Sign=1;} 
+    else 
+    {x_Sign=0;} ;
+  y_Range = yPosition - 511 ;
+  y_Abs=abs(y_Range);
+  if(y_Range>0)
+    {y_Sign=1;} 
+    else 
+    {y_Sign=0;} ;
+ } 
+
+void JoyPrint(int delaytime){
+  Serial.print("X: ");
+  Serial.print(xPosition);
+  Serial.print(" | x_Range: ");
+  Serial.print(x_Range);
+  Serial.print(" | x_Abs: ");
+  Serial.print(x_Abs);
+  Serial.print(" | x_Sign: ");
+  Serial.print(x_Sign);
+  Serial.print(" || Y: ");
+  Serial.print(yPosition);
+  Serial.print(" | y_Range: ");
+  Serial.print(y_Range);
+  Serial.print(" | y_Abs: ");
+  Serial.print(y_Abs);
+  Serial.print(" | y_Sign: ");
+  Serial.print(y_Sign);
+  Serial.print(" !| Button: ");
+  Serial.println(buttonState);
+  delay(delaytime);
+}
+
+
+
+// Stepper functions
+
+void variablesteps (int steps_left,int direct) {
+  Direction=direct;
+  while(steps_left>0){
+  currentMillis = micros();
+  if(currentMillis-last_time>=1000){
+  stepper(1); 
+  time=time+micros()-last_time;
+  last_time=micros();
+  steps_left--;
+  }
+  }
+}
+
+void stepper(int xw){
+  for (int x=0;x<xw;x++){
+switch(Steps){
+   case 0:
+     digitalWrite(IN1, LOW); 
+     digitalWrite(IN2, LOW);
+     digitalWrite(IN3, LOW);
+     digitalWrite(IN4, HIGH);
+   break; 
+   case 1:
+     digitalWrite(IN1, LOW); 
+     digitalWrite(IN2, LOW);
+     digitalWrite(IN3, HIGH);
+     digitalWrite(IN4, HIGH);
+   break; 
+   case 2:
+     digitalWrite(IN1, LOW); 
+     digitalWrite(IN2, LOW);
+     digitalWrite(IN3, HIGH);
+     digitalWrite(IN4, LOW);
+   break; 
+   case 3:
+     digitalWrite(IN1, LOW); 
+     digitalWrite(IN2, HIGH);
+     digitalWrite(IN3, HIGH);
+     digitalWrite(IN4, LOW);
+   break; 
+   case 4:
+     digitalWrite(IN1, LOW); 
+     digitalWrite(IN2, HIGH);
+     digitalWrite(IN3, LOW);
+     digitalWrite(IN4, LOW);
+   break; 
+   case 5:
+     digitalWrite(IN1, HIGH); 
+     digitalWrite(IN2, HIGH);
+     digitalWrite(IN3, LOW);
+     digitalWrite(IN4, LOW);
+   break; 
+     case 6:
+     digitalWrite(IN1, HIGH); 
+     digitalWrite(IN2, LOW);
+     digitalWrite(IN3, LOW);
+     digitalWrite(IN4, LOW);
+   break; 
+   case 7:
+     digitalWrite(IN1, HIGH); 
+     digitalWrite(IN2, LOW);
+     digitalWrite(IN3, LOW);
+     digitalWrite(IN4, HIGH);
+   break; 
+   default:
+     digitalWrite(IN1, LOW); 
+     digitalWrite(IN2, LOW);
+     digitalWrite(IN3, LOW);
+     digitalWrite(IN4, LOW);
+   break; 
+}
+SetDirection();
+}
+} 
+void SetDirection(){
+if(Direction==1){ Steps++;}
+if(Direction==0){ Steps--; }
+if(Steps>7){Steps=0;}
+if(Steps<0){Steps=7; }
+}
+
+
+
+
+
