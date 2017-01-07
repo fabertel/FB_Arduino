@@ -1,14 +1,18 @@
 
-/* Sensore temperatura e umidita 
+/* 
+ARD014 Termometro e Umidiità 07/01/2016
+Sensore temperatura e umidita 
 tutorial + library : http://www.circuitbasics.com/how-to-set-up-the-dht11-humidity-sensor-on-an-arduino/
 */
 
 #include <dht.h>
 dht DHT;
+char version[] = "ARD014 Termometro e Umidita 07/01/2016";
 #define DHT11_PIN 7
 
 void setup(){
   Serial.begin(9600);
+  Serial.println(version);
 }
 
 void loop()
@@ -18,6 +22,7 @@ void loop()
   Serial.print(DHT.temperature,0);
   Serial.print(" C | Humidity = ");
   Serial.print(DHT.humidity,0);
-  Serial.println(" %");
-  delay(1000);
+  Serial.print(" % @ ");
+  Serial.println(millis());
+  delay(10000);
 }
