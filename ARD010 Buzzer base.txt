@@ -1,4 +1,9 @@
 /*
+
+amplif passivi piezo .. usare questo codice .. 2 connettori, segnale e GND (quelli dei giochini) 
+amplif attivi .. 3 connettori GNS/5V/SGN .. solo BEEP non modulabili .. ne ho 1 non funz ancora
+http://forum.arduino.cc/index.php?topic=129741.0
+
 SparkFun Inventor's Kit 
 Example sketch 11
 
