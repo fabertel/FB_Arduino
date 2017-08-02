@@ -1,5 +1,6 @@
 /* 
 ARD22 PILOTA NOKIA5110 DISPLAY
+V0 . LOOP CHE STAMPA SU SERIALE E DISPLAY NUMERI PROGRESSIVI . PER ORA SU DISPLAY SOLO IL PRIMO CARATTERE 
 -------------
 PIN SCHEDA v ARDUINO
 1 > VCC 3v 
@@ -20,6 +21,8 @@ code : http://playground.arduino.cc/Code/PCD8544
 
 #define LCD_X     84
 #define LCD_Y     48
+
+#include <dht.h>
 
 static const byte ASCII[][5] =
 {
@@ -174,11 +177,33 @@ void LcdWrite(byte dc, byte data)
 
 void setup(void)
 {
+ 
+  /*il Display con questi caratteri ha 6 righe di 12 caratteri. Quando arriva a fine schermo riparte dall'inizio.
+   * All'avvio inizia da metà riga aggiungere 5 spazi -->    
+   char myString[] = "123456789012";
+   LcdString("     ") ;
+   LcdString(myString);
+   */
+  Serial.begin(9600);
   LcdInitialise();
   LcdClear();
-  LcdString("Not in my house!!");
+  LcdString("GO ");
 }
 
+int i=1;
+char b[5];
+String str;
+  
 void loop(void)
 {
-}
+
+i=i+1;
+str=String(i);
+str.toCharArray(b,2);
+
+   LcdString(b);
+   Serial.println(b);
+   delay(500);
+   
+ }
+ 
