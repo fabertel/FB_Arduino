@@ -1,14 +1,21 @@
 /* 
 ARD23 SENSORE TEMPERATURA E DISPLAY 
 v2 .. added max e min 
-v3 .. added timer .. corregger e spazi per a capo
+v3 .. added timer .. non capisco c'è un loop di troppo 
 
 -------------
-PIN SCHEDA v ARDUINO
-1 > VCC 3v 
-2 >  GND
-3..8 > su PIN DIGITAL 7..2
-code : http://playground.arduino.cc/Code/PCD8544
+
+DISPLAY
+  PIN SCHEDA v ARDUINO
+  1 > VCC 3v 
+  2 >  GND
+  3..8 > su PIN DIGITAL 7..2
+  code : http://playground.arduino.cc/Code/PCD8544
+SENSORE
+  1 > DIG8
+  2 > VCC 5v
+  3 > GND
+  
 -------------
 */
 
@@ -214,24 +221,24 @@ char output_Char3[50];
  if(hours < 10)     H_extra=("0");
  if(minutes < 10)   M_extra=("0");
  if(seconds < 10)   S_extra=("0");
- String TimeElapsed = "  ";
- TimeElapsed += TimeElapsed+ String(days,DEC)+ ":"+H_extra+String(hours)+ ":" +M_extra+String(minutes)+ ":" +S_extra+String(seconds) ;
- Serial.println(TimeElapsed);  
+ String TimeElapsed = "  "+ String(days,DEC)+ ":"+H_extra+String(hours)+ ":" +M_extra+String(minutes)+ ":" +S_extra+String(seconds) ;
  TimeElapsed.toCharArray(output_Char3, 50);
+ Serial.println(TimeElapsed);  
  LcdString(output_Char3);
+ Serial.println("............");
+ LcdString("............");
 }
 
 /* Funzioni per misura tempo FINE*/
 
-void setup(void)
+void setup()
 {
  
   /*il Display con questi caratteri ha 6 righe di 12 caratteri. Quando arriva a fine schermo riparte dall'inizio.
    * All'avvio inizia da metà riga aggiungere 5 spazi -->    
    char myString[] = "123456789012";
-   LcdString("     ") ;
-   LcdString(myString);
    */
+   
   Serial.begin(9600);
   LcdInitialise();
   LcdClear();
@@ -245,31 +252,27 @@ char output_Char1[50];
 char output_Char2[50];
 int chk = DHT.read11(DHT11_PIN);
 
-if (DHT.temperature > TEMPMAX)
-  TEMPMAX = DHT.temperature; 
-if (DHT.temperature < TEMPMIN)
-  TEMPMIN = DHT.temperature; 
-if (DHT.humidity > HUMMAX)
-  HUMMAX = DHT.humidity; 
-if (DHT.humidity < HUMMIN)
-  HUMMIN = DHT.humidity; 
+if (DHT.temperature > TEMPMAX)    TEMPMAX = DHT.temperature; 
+if (DHT.temperature < TEMPMIN)    TEMPMIN = DHT.temperature; 
+if (DHT.humidity > HUMMAX)        HUMMAX = DHT.humidity; 
+if (DHT.humidity < HUMMIN)        HUMMIN = DHT.humidity; 
 
 String stringMaxMin = "R";
 stringMaxMin = stringMaxMin + TEMPMIN + "-" + TEMPMAX + "|" + HUMMIN + "-" + HUMMAX;
-Serial.println(stringMaxMin);
-
-String stringTwo = "T=";
-stringTwo = stringTwo +String(DHT.temperature, 0) + "C H=" + String(DHT.humidity, 0) + "% ";
-Serial.println(stringTwo);
-
+String stringTwo    = "T=" + String(DHT.temperature, 0) + "C H=" + String(DHT.humidity, 0) + "% ";
 stringTwo.toCharArray(output_Char1, 50);
 stringMaxMin.toCharArray(output_Char2, 50);
+
 LcdString("------------");
 LcdString(output_Char1);
 LcdString(output_Char2);
 
+Serial.println("------------");
+Serial.println(stringMaxMin);
+Serial.println(stringTwo);
+
  time(millis() / 1000);
- delay(5000);
+ delay(1000);
    
  }
  
