@@ -214,7 +214,6 @@ int minutes = numberOfMinutes(val);
 int seconds = numberOfSeconds(val);
 char output_Char3[50];
 
- // digital clock display of current time
  String H_extra="";
  String M_extra="";
  String S_extra="";
@@ -224,8 +223,9 @@ char output_Char3[50];
  String TimeElapsed = "  "+ String(days,DEC)+ ":"+H_extra+String(hours)+ ":" +M_extra+String(minutes)+ ":" +S_extra+String(seconds) ;
  TimeElapsed.toCharArray(output_Char3, 50);
  Serial.println(TimeElapsed);  
- LcdString(output_Char3);
  Serial.println("............");
+ 
+ LcdString(output_Char3);
  LcdString("............");
 }
 
@@ -237,6 +237,10 @@ void setup()
   /*il Display con questi caratteri ha 6 righe di 12 caratteri. Quando arriva a fine schermo riparte dall'inizio.
    * All'avvio inizia da metà riga aggiungere 5 spazi -->    
    char myString[] = "123456789012";
+
+  loop per scriverew una linea di caratteri 
+  for (int index = 0; index < 1*84; index++) LcdWrite(LCD_D, 0x7f); 
+
    */
    
   Serial.begin(9600);
@@ -247,6 +251,7 @@ void setup()
   
 void loop()
 {
+
 
 char output_Char1[50];
 char output_Char2[50];
@@ -263,7 +268,6 @@ String stringTwo    = "T=" + String(DHT.temperature, 0) + "C H=" + String(DHT.hu
 stringTwo.toCharArray(output_Char1, 50);
 stringMaxMin.toCharArray(output_Char2, 50);
 
-LcdString("------------");
 LcdString(output_Char1);
 LcdString(output_Char2);
 
@@ -272,7 +276,8 @@ Serial.println(stringMaxMin);
 Serial.println(stringTwo);
 
  time(millis() / 1000);
- delay(1000);
-   
- }
+ delay(3000);
+
+
+    }
  
