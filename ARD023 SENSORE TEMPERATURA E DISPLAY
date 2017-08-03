@@ -1,7 +1,8 @@
 /* 
 ARD23 SENSORE TEMPERATURA E DISPLAY 
 v2 .. added max e min 
-v3 .. added timer .. non capisco c'è un loop di troppo 
+v3 .. added timer 
+v4 .. con posizionamento fisso e bordo 
 
 -------------
 
@@ -205,6 +206,44 @@ void LcdWrite(byte dc, byte data)
 /* Funzioni per stampa display FINE */
 
 
+// gotoXY routine to position cursor 
+// x - range: 0 to 84
+// y - range: 0 to 5
+
+void gotoXY(int x, int y)
+{
+  LcdWrite( 0, 0x80 | x);  // Column.
+  LcdWrite( 0, 0x40 | y);  // Row.  
+}
+
+void drawLine(void)
+{
+  unsigned char  j;  
+   for(j=0; j<84; j++) // top
+  {
+          gotoXY (j,0);
+    LcdWrite (1,0x01);
+  }   
+  for(j=0; j<84; j++) //Bottom
+  {
+          gotoXY (j,5);
+    LcdWrite (1,0x80);
+  }   
+
+  for(j=0; j<6; j++) // Right
+  {
+          gotoXY (83,j);
+    LcdWrite (1,0xff);
+  }   
+  for(j=0; j<6; j++) // Left
+  {
+          gotoXY (0,j);
+    LcdWrite (1,0xff);
+  }
+}
+
+
+
 /* Funzioni per misura tempo INIZIO*/
 
 void time(long val){  
@@ -220,13 +259,13 @@ char output_Char3[50];
  if(hours < 10)     H_extra=("0");
  if(minutes < 10)   M_extra=("0");
  if(seconds < 10)   S_extra=("0");
- String TimeElapsed = "  "+ String(days,DEC)+ ":"+H_extra+String(hours)+ ":" +M_extra+String(minutes)+ ":" +S_extra+String(seconds) ;
+ String TimeElapsed =  String(days,DEC)+ ":"+H_extra+String(hours)+ ":" +M_extra+String(minutes)+ ":" +S_extra+String(seconds) ;
  TimeElapsed.toCharArray(output_Char3, 50);
  Serial.println(TimeElapsed);  
  Serial.println("............");
- 
+ gotoXY(4,4);
  LcdString(output_Char3);
- LcdString("............");
+
 }
 
 /* Funzioni per misura tempo FINE*/
@@ -252,9 +291,9 @@ void setup()
 void loop()
 {
 
-
 char output_Char1[50];
-char output_Char2[50];
+char output_stringMaxMinT[50];
+char output_stringMaxMinH[50];
 int chk = DHT.read11(DHT11_PIN);
 
 if (DHT.temperature > TEMPMAX)    TEMPMAX = DHT.temperature; 
@@ -262,20 +301,29 @@ if (DHT.temperature < TEMPMIN)    TEMPMIN = DHT.temperature;
 if (DHT.humidity > HUMMAX)        HUMMAX = DHT.humidity; 
 if (DHT.humidity < HUMMIN)        HUMMIN = DHT.humidity; 
 
-String stringMaxMin = "R";
-stringMaxMin = stringMaxMin + TEMPMIN + "-" + TEMPMAX + "|" + HUMMIN + "-" + HUMMAX;
+String stringMaxMinT = "T_R ";
+stringMaxMinT = stringMaxMinT + TEMPMIN + "-" + TEMPMAX ;
+String stringMaxMinH = "H_R ";
+stringMaxMinH = stringMaxMinH + HUMMIN + "-" + HUMMAX;
 String stringTwo    = "T=" + String(DHT.temperature, 0) + "C H=" + String(DHT.humidity, 0) + "% ";
 stringTwo.toCharArray(output_Char1, 50);
-stringMaxMin.toCharArray(output_Char2, 50);
+stringMaxMinH.toCharArray(output_stringMaxMinH, 50);
+stringMaxMinT.toCharArray(output_stringMaxMinT, 50);
 
+drawLine();
+gotoXY(4,1);
 LcdString(output_Char1);
-LcdString(output_Char2);
+gotoXY(4,2);
+LcdString(output_stringMaxMinT);
+gotoXY(4,3);
+LcdString(output_stringMaxMinH);
 
 Serial.println("------------");
-Serial.println(stringMaxMin);
+Serial.println(stringMaxMinH);
+Serial.println(stringMaxMinT);
 Serial.println(stringTwo);
 
- time(millis() / 1000);
+ time(millis() / 1000); 
  delay(3000);
 
 
