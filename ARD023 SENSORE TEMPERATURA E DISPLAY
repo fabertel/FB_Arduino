@@ -1,20 +1,15 @@
 /* 
 ARD23 SENSORE TEMPERATURA E DISPLAY 
+v2 .. added max e min 
+v3 .. added timer .. corregger e spazi per a capo
 
 -------------
-DISPLAY
-	PIN SCHEDA v ARDUINO
-	1 > VCC 3v 
-	2 >  GND
-	3..8 > su PIN DIGITAL 7..2
-	code : http://playground.arduino.cc/Code/PCD8544
-SENSORE
-	1 > DIG8
-	2 > VCC 5v
-	3 > GND
-	
+PIN SCHEDA v ARDUINO
+1 > VCC 3v 
+2 >  GND
+3..8 > su PIN DIGITAL 7..2
+code : http://playground.arduino.cc/Code/PCD8544
 -------------
-
 */
 
 #define PIN_SCE   7
@@ -36,6 +31,19 @@ int TEMPMAX = 1;
 int TEMPMIN = 100;
 int HUMMAX = 1;
 int HUMMIN = 100;
+
+/* Useful Constants */
+#define SECS_PER_MIN  (60UL)
+#define SECS_PER_HOUR (3600UL)
+#define SECS_PER_DAY  (SECS_PER_HOUR * 24L)
+
+/* Useful Macros for getting elapsed time */
+#define numberOfSeconds(_time_) (_time_ % SECS_PER_MIN)  
+#define numberOfMinutes(_time_) ((_time_ / SECS_PER_MIN) % SECS_PER_MIN) 
+#define numberOfHours(_time_) (( _time_% SECS_PER_DAY) / SECS_PER_HOUR)
+#define elapsedDays(_time_) ( _time_ / SECS_PER_DAY)  
+
+/* Funzioni per stampa display INIZIO */
 
 static const byte ASCII[][5] =
 {
@@ -187,6 +195,33 @@ void LcdWrite(byte dc, byte data)
   shiftOut(PIN_SDIN, PIN_SCLK, MSBFIRST, data);
   digitalWrite(PIN_SCE, HIGH);
 }
+/* Funzioni per stampa display FINE */
+
+
+/* Funzioni per misura tempo INIZIO*/
+
+void time(long val){  
+int days = elapsedDays(val);
+int hours = numberOfHours(val);
+int minutes = numberOfMinutes(val);
+int seconds = numberOfSeconds(val);
+char output_Char3[50];
+
+ // digital clock display of current time
+ String H_extra="";
+ String M_extra="";
+ String S_extra="";
+ if(hours < 10)     H_extra=("0");
+ if(minutes < 10)   M_extra=("0");
+ if(seconds < 10)   S_extra=("0");
+ String TimeElapsed = "  ";
+ TimeElapsed += TimeElapsed+ String(days,DEC)+ ":"+H_extra+String(hours)+ ":" +M_extra+String(minutes)+ ":" +S_extra+String(seconds) ;
+ Serial.println(TimeElapsed);  
+ TimeElapsed.toCharArray(output_Char3, 50);
+ LcdString(output_Char3);
+}
+
+/* Funzioni per misura tempo FINE*/
 
 void setup(void)
 {
@@ -203,7 +238,7 @@ void setup(void)
   LcdString("     ");
   }
   
-void loop(void)
+void loop()
 {
 
 char output_Char1[50];
@@ -220,22 +255,11 @@ if (DHT.humidity < HUMMIN)
   HUMMIN = DHT.humidity; 
 
 String stringMaxMin = "R";
-stringMaxMin += TEMPMIN;
-stringMaxMin += "-";
-stringMaxMin += TEMPMAX;
-stringMaxMin += "|";
-stringMaxMin += HUMMIN;
-stringMaxMin += "-";
-stringMaxMin += HUMMAX;
+stringMaxMin = stringMaxMin + TEMPMIN + "-" + TEMPMAX + "|" + HUMMIN + "-" + HUMMAX;
 Serial.println(stringMaxMin);
 
 String stringTwo = "T=";
-stringTwo += String(DHT.temperature, 0);
-stringTwo += "C H=";
-stringTwo += String(DHT.humidity, 0);
-stringTwo += "% ";
-/* stringTwo += " @";
-stringTwo += String(millis()); */
+stringTwo = stringTwo +String(DHT.temperature, 0) + "C H=" + String(DHT.humidity, 0) + "% ";
 Serial.println(stringTwo);
 
 stringTwo.toCharArray(output_Char1, 50);
@@ -243,7 +267,9 @@ stringMaxMin.toCharArray(output_Char2, 50);
 LcdString("------------");
 LcdString(output_Char1);
 LcdString(output_Char2);
-delay(1000);
+
+ time(millis() / 1000);
+ delay(5000);
    
  }
  
